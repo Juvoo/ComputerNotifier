@@ -1,3 +1,3 @@
 # ComputerNotifier
  
-Android app that displays all notifications on your computer(s).
+Android app that shows the device's notifications on your computer(s).
