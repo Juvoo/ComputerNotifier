@@ -1,6 +1,7 @@
 package com.kinghouser.util;
 
 import android.app.Notification;
+import android.net.ConnectivityManager;
 import com.kinghouser.ui.home.HomeViewModel;
 
 import java.io.ObjectOutputStream;
@@ -17,8 +18,8 @@ public class NotificationRelay extends Thread {
     public void run() {
         try {
             serverSocket = new ServerSocket(0);
-            HomeViewModel.mText.postValue("Connect with ip address: " + Utils.getLocalIpAddress() + " and port: " + serverSocket.getLocalPort());
-            System.out.println("Connect with ip address: " + Utils.getLocalIpAddress() + " and port: " + serverSocket.getLocalPort());
+            HomeViewModel.mText.postValue("Connect with ip address: " + Utils.getMobileIP() + " and port: " + serverSocket.getLocalPort());
+            System.out.println("Connect with ip address: " + Utils.getMobileIP() + " and port: " + serverSocket.getLocalPort());
 
             new ClientReceiverThread().start();
         } catch (Exception e) {
@@ -29,13 +30,11 @@ public class NotificationRelay extends Thread {
     public void relayNotification(Notification notification) {
         if (clientSocket == null) return;
         try {
+            com.kinghouser.util.Notification customNotification = new com.kinghouser.util.Notification("", notification.tickerText.toString());
             OutputStream outputStream = clientSocket.getOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
 
-            objectOutputStream.writeObject(notification);
-
-            objectOutputStream.close();
-
+            objectOutputStream.writeObject(customNotification);
         } catch (Exception e) {
             e.printStackTrace();
         }
