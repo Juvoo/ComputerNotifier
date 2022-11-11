@@ -1,13 +1,14 @@
 <resources>
-    <string name="app_name">ComputerNotifier</string>
+    <string name="app_name">Computer Notifier</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Computer Notifier</string>
-    <string name="nav_header_subtitle"></string>
+    <string name="nav_header_subtitle">@string/version_name</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="version_name">v1.0</string>
 
-    <string name="service_label">Notification Listener Service</string>
+    <string name="service_label">Read and send notification data</string>
 
     <string name="menu_home">Home</string>
 </resources>
