@@ -1,6 +1,7 @@
 package com.kinghouser.util;
 
 import android.app.Notification;
+import com.kinghouser.ui.home.HomeViewModel;
 
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -15,8 +16,9 @@ public class NotificationRelay extends Thread {
     @Override
     public void run() {
         try {
-            serverSocket = new ServerSocket(5000);
-            System.out.println("Connect with port: " + serverSocket.getLocalPort());
+            serverSocket = new ServerSocket(0);
+            HomeViewModel.mText.postValue("Connect with ip address: " + Utils.getLocalIpAddress() + " and port: " + serverSocket.getLocalPort());
+            System.out.println("Connect with ip address: " + Utils.getLocalIpAddress() + " and port: " + serverSocket.getLocalPort());
 
             new ClientReceiverThread().start();
         } catch (Exception e) {

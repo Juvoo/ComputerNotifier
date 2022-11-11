@@ -12,8 +12,14 @@ public class NotificationListenerService extends android.service.notification.No
 
     @Override
     public IBinder onBind(Intent intent) {
-        prepareNotificationRelayServer();
         return super.onBind(intent);
+    }
+
+    @Override
+    public void onCreate() {
+        System.out.println("Service created");
+        if (notificationRelay == null || notificationRelay.serverSocket == null || !notificationRelay.serverSocket.isBound()) prepareNotificationRelayServer();
+        super.onCreate();
     }
 
     @Override

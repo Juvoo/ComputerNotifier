@@ -6,6 +6,7 @@ public class ClientReceiverThread extends Thread {
     public void run() {
         while (true) {
             try {
+                if (!NotificationListenerService.notificationRelay.serverSocket.isBound()) return;
                 NotificationListenerService.notificationRelay.clientSocket = NotificationListenerService.notificationRelay.serverSocket.accept();
                 System.out.println("Client connected...");
             } catch (Exception e) {
