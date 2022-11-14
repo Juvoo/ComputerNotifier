@@ -1,12 +1,17 @@
 package com.kinghouser.util;
 
+import android.app.AlertDialog;
+import android.app.Notification;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.LinkAddress;
 import android.net.LinkProperties;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
+import android.view.View;
+import com.google.android.material.snackbar.Snackbar;
 import com.kinghouser.MainActivity;
 
 import java.net.*;

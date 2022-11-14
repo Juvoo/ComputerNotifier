@@ -1,5 +1,6 @@
 package com.kinghouser;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -41,12 +42,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
-        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+        binding.appBarMain.testNotifier.setOnClickListener(view -> {
+            if (server != null && server.isRunning) {
+                if (server.clientThreads.size() != 0) {
+                    showTestNotificationDialog(view);
+                } else Snackbar.make(view, "No clients connected!", Snackbar.LENGTH_SHORT).show();
+            } else Snackbar.make(view, "Server offline!", Snackbar.LENGTH_SHORT).show();
         });
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
@@ -60,19 +61,18 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        applicationContext = this.getApplicationContext();
-
-        if(!isNotificationServiceEnabled()){
+        if(!isNotificationServiceEnabled()) {
             startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
         }
 
         server = new Server();
         server.start();
+
+        applicationContext = this.getApplicationContext();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -99,5 +99,33 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    private void showTestNotificationDialog(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("Send test notification to all clients?");
+
+        builder.setPositiveButton(
+                "Yes",
+                (dialog, id) -> {
+                    Snackbar.make(view, "Sending notification to clients...", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    try {
+                        MainActivity.server.relayNotification(new com.kinghouser.util.Notification("Test Notification", "This notification is a test!"));
+                    } catch (Exception e) {
+                        Snackbar.make(view, "Failed to send notification", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                        return;
+                    }
+                    Snackbar.make(view, "Successfully sent notification", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                });
+
+        builder.setNegativeButton(
+                "No",
+                (dialog, id) -> dialog.cancel());
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

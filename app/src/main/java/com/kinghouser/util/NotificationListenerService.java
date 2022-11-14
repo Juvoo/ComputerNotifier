@@ -16,10 +16,10 @@ public class NotificationListenerService extends android.service.notification.No
     }
 
     @Override
-    public void onNotificationPosted(StatusBarNotification sbn) {
+    public void onNotificationPosted(StatusBarNotification statusBarNotification) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Toast.makeText(MainActivity.applicationContext, "Received notification", Toast.LENGTH_SHORT).show();
-            MainActivity.server.relayNotification(sbn.getNotification());
+            MainActivity.server.relayNotification(statusBarNotification);
         }
     }
 }

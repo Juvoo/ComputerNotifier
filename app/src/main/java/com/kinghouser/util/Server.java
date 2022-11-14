@@ -1,5 +1,6 @@
 package com.kinghouser.util;
 
+import android.service.notification.StatusBarNotification;
 import android.widget.Toast;
 import com.kinghouser.MainActivity;
 import com.kinghouser.ui.home.HomeViewModel;
@@ -13,13 +14,16 @@ import java.util.ArrayList;
 
 public class Server extends Thread {
 
-    public static ServerSocket serverSocket = null;
-    public static Socket clientSocket = null;
-    public static final ArrayList<ClientThread> clientThreads = new ArrayList<>();
+    public ServerSocket serverSocket = null;
+    public Socket clientSocket = null;
+    public final ArrayList<ClientThread> clientThreads = new ArrayList<>();
+
+    public boolean isRunning = false;
 
     public void run() {
         try {
             serverSocket = new ServerSocket(0);
+            isRunning = true;
             HomeViewModel.mText.postValue("Connect with ip address: " + Utils.getMobileIP() + " and port: " + serverSocket.getLocalPort());
             System.out.println("Connect with ip address: " + Utils.getMobileIP() + " and port: " + serverSocket.getLocalPort());
         } catch (IOException e) {
@@ -36,11 +40,26 @@ public class Server extends Thread {
         }
     }
 
-    public void relayNotification(android.app.Notification notification) {
-        com.kinghouser.util.Notification customNotification = new com.kinghouser.util.Notification("", notification.tickerText.toString());
+    public void relayNotification(StatusBarNotification statusBarNotification) {
+        com.kinghouser.util.Notification customNotification = new com.kinghouser.util.Notification(statusBarNotification.getNotification().extras.getString("android.title"), statusBarNotification.getNotification().extras.getString("android.text"));
 
         for (ClientThread clientThread : clientThreads) {
             clientThread.sendNotification(customNotification);
+        }
+    }
+
+    public void relayNotification(com.kinghouser.util.Notification notification) {
+        for (ClientThread clientThread : clientThreads) {
+            clientThread.sendNotification(notification);
+        }
+    }
+
+    public void close() {
+        try {
+            serverSocket.close();
+            isRunning = false;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
