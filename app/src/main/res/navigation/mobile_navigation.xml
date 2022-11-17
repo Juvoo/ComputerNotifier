@@ -9,6 +9,8 @@
             android:id="@+id/nav_home"
             android:name="com.kinghouser.ui.home.HomeFragment"
             android:label="@string/menu_home"
+            android:fontFamily="sans-serif-black"
+            android:textColor="@color/white"
             tools:layout="@layout/fragment_home"/>
 
 </navigation>

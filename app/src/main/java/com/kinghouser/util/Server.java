@@ -25,7 +25,6 @@ public class Server extends Thread {
             serverSocket = new ServerSocket(0);
             isRunning = true;
             HomeViewModel.mText.postValue("Connect with ip address: " + Utils.getMobileIP() + " and port: " + serverSocket.getLocalPort());
-            System.out.println("Connect with ip address: " + Utils.getMobileIP() + " and port: " + serverSocket.getLocalPort());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,6 +55,12 @@ public class Server extends Thread {
 
     public void close() {
         try {
+            for (ClientThread clientThread : clientThreads) {
+                clientThread.clientSocket.close();
+                clientThread.stop();
+            }
+            clientThreads.clear();
+
             serverSocket.close();
             isRunning = false;
         } catch (Exception e) {
@@ -68,7 +73,7 @@ class ClientThread extends Thread {
 
     private ObjectInputStream objectInputStream = null;
     private ObjectOutputStream objectOutputStream = null;
-    private final Socket clientSocket;
+    public final Socket clientSocket;
 
     public ClientThread(Socket clientSocket) {
         this.clientSocket = clientSocket;

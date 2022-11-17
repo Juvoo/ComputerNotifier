@@ -61,12 +61,14 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        if(!isNotificationServiceEnabled()) {
+        if (!isNotificationServiceEnabled()) {
             startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
         }
 
+        /*
         server = new Server();
         server.start();
+        */
 
         applicationContext = this.getApplicationContext();
     }

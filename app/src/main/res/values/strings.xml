@@ -11,4 +11,5 @@
     <string name="service_label">Read and send notification data</string>
 
     <string name="menu_home">Home</string>
+    <string name="computer_notifier">Computer Notifier</string>
 </resources>
